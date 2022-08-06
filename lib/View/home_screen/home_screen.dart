@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:freeze_app/View/home_screen/HomeController.dart';
+import 'package:freeze_app/http/response/get_all_target_response/government.dart';
 import 'package:get/get.dart';
 //route
 import 'package:page_transition/page_transition.dart';
@@ -74,7 +75,7 @@ class _HomescreenState extends State<Homescreen> {
                           height: 10.h,
                         ),
                         buildTreeVidget(size, context, logic),
-                        buildTargetWIdget(size),
+                        buildTargetWIdget(logic.nonEmptyTargets),
                       ],
                     )),
                   )),
@@ -516,7 +517,8 @@ class _HomescreenState extends State<Homescreen> {
     );
   }
 
-  Container buildTargetWIdget(Size size) {
+  Container buildTargetWIdget(Map<String, List<Target>> topTargets) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       padding: EdgeInsets.all(6.r),
       //  height: size.height * 0.6,
@@ -530,167 +532,130 @@ class _HomescreenState extends State<Homescreen> {
               mainAxisSpacing: 20,
               mainAxisExtent: 200,
               childAspectRatio: 4),
-          itemCount: 2,
-          itemBuilder: (BuildContext context, int index) => Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.r),
-                  color: Color(0xff939F9A),
-                  border: Border.all(color: Color(0xffB78ACF), width: 2),
-                  gradient: LinearGradient(colors: [
-                    Color(0xff4A4A4A).withOpacity(0.4),
-                    Color(0xff696868),
-                    Color(0xff4A4A4A).withOpacity(0.4),
-                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      height: 10.sp,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          "1",
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 14.sp),
-                        ),
-                        InkWell(
-                          child: Icon(Icons.calendar_month_rounded,
-                              color: Colors.white, size: 14.sp),
-                          onTap: () {
-                            _showMaterialDialog(context);
-                          },
-                        )
-                      ],
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 20.0.w, right: 20.0.w),
-                      child: Divider(
-                        color: Colors.white,
+          itemCount: topTargets.keys.length,
+          itemBuilder: (BuildContext context, int index) {
+            String title = topTargets.keys.elementAt(index);
+
+            return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.r),
+                color: Color(0xff939F9A),
+                border: Border.all(color: Color(0xffB78ACF), width: 2),
+                gradient: LinearGradient(colors: [
+                  Color(0xff4A4A4A).withOpacity(0.4),
+                  Color(0xff696868),
+                  Color(0xff4A4A4A).withOpacity(0.4),
+                ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 10.sp,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        title.toUpperCase(),
+                        style: TextStyle(color: Colors.white, fontSize: 14.sp),
                       ),
+                      InkWell(
+                        child: Icon(Icons.calendar_month_rounded,
+                            color: Colors.white, size: 14.sp),
+                        onTap: () {
+                          _showMaterialDialog(context);
+                        },
+                      )
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 20.0.w, right: 20.0.w),
+                    child: Divider(
+                      color: Colors.white,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          'Name',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        Text(
-                          'Target',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(''),
-                        ),
-                        Text(
-                          'Name',
-                          style: TextStyle(
-                              color: Color(0xff939F9A), fontSize: 10.sp),
-                        ),
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                        Text(
-                          '320',
-                          style: TextStyle(
-                              color: Color(0xff939F9A), fontSize: 10.sp),
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellowAccent,
-                          size: 12.sp,
-                        ),
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.grey,
-                        ),
-                        Text(
-                          'Name',
-                          style: TextStyle(
-                              color: Color(0xff939F9A), fontSize: 10.sp),
-                        ),
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                        Text(
-                          '320',
-                          style: TextStyle(
-                              color: Color(0xff939F9A), fontSize: 10.sp),
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.white,
-                          size: 12.sp,
-                        ),
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                        CircleAvatar(
-                          radius: 13,
-                          backgroundColor: Colors.grey,
-                        ),
-                        Text(
-                          'Name',
-                          style: TextStyle(
-                              color: Color(0xff939F9A), fontSize: 10.sp),
-                        ),
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                        Text(
-                          '320',
-                          style: TextStyle(
-                              color: Color(0xff939F9A), fontSize: 10.sp),
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.brown,
-                          size: 12.sp,
-                        ),
-                        SizedBox(
-                          width: 2.sp,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10.sp,
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        'Name',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        'Target',
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: buildTargetsDetailColumn(topTargets[title] ?? []),
+                  ),
+                  SizedBox(
+                    height: 10.sp,
+                  ),
+                ],
+              ),
+            );
+          }),
+    );
+  }
+
+  Widget buildTargetsDetailColumn(List<Target> topTargets) {
+    List<Widget> children = [];
+
+    topTargets.forEach(
+      (element) {
+        children.add(Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: buildTargetsDetailWidget(
+              element.name?.capitalizeFirst ?? '', element.target.toString()),
+        ));
+      },
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: children.length > 3 ? children.sublist(0, 3) : children,
+    );
+  }
+
+  Row buildTargetsDetailWidget(String name, String points) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: CircleAvatar(
+            radius: 13,
+            backgroundColor: Colors.grey,
+            backgroundImage: NetworkImage(''),
+          ),
+        ),
+        Text(
+          name,
+          style: TextStyle(color: Color(0xff939F9A), fontSize: 10.sp),
+        ),
+        SizedBox(
+          width: 2.sp,
+        ),
+        Spacer(),
+        Text(
+          points,
+          style: TextStyle(color: Color(0xff939F9A), fontSize: 10.sp),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Icon(
+            Icons.star,
+            color: Colors.yellowAccent,
+            size: 12.sp,
+          ),
+        ),
+        SizedBox(
+          width: 2.sp,
+        ),
+      ],
     );
   }
 }
