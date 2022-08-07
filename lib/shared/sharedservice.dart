@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:freeze_app/http/response/get_user_profile_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceHelper {
@@ -43,4 +47,39 @@ class PreferenceHelper {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.get(keyPair);
   }
+
+  // Get User
+  static Future<GetUserProfileResponse?> getUser() async {
+    String? value;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    value = pref.get("user") as String?;
+    if (value?.isEmpty ?? true) {
+      return null;
+    } else {
+      Map<String, dynamic> map = await _parseJson(value!);
+      return GetUserProfileResponse.fromJson(map);
+    }
+  }
+
+  static saveUser(GetUserProfileResponse user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String userString = "";
+    userString = jsonEncode((user).toJson());
+
+    await prefs.setString("user", userString);
+  }
+
+  // Parse and Decode
+  static Map<String, dynamic> _parseAndDecode(String response) {
+    return jsonDecode(response);
+  }
+
+  // Parse Json
+  static Future<Map<String, dynamic>> _parseJson(String text) {
+    return compute(_parseAndDecode, text);
+  }
+
+
 }
+ 

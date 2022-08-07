@@ -16,7 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool visible = false;
-  bool isLoggedIn = true;
+  bool isLoggedIn = false;
 
   @override
   void initState() {

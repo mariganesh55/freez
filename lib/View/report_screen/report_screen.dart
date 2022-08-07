@@ -4,14 +4,14 @@ import 'package:freeze_app/Model/Theme/app_color.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
-class Report extends StatefulWidget {
-  const Report({Key? key}) : super(key: key);
+class ReportScreen extends StatefulWidget {
+  const ReportScreen({Key? key}) : super(key: key);
 
   @override
-  State<Report> createState() => _ReportState();
+  State<ReportScreen> createState() => _ReportScreenState();
 }
 
-class _ReportState extends State<Report> {
+class _ReportScreenState extends State<ReportScreen> {
   List<DataModel> dataModel = <DataModel>[
     DataModel(
         name: 'Tamilvanan',
@@ -50,7 +50,7 @@ class _ReportState extends State<Report> {
             LinearEmployeePoints(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [CircularMonthlyPoints(), CircularMonthlyPoints()],
+              children: [_buildMonthTargetGraph(), _buildWeeklyTargetGraph()],
             ),
             ReportEmployeeDetails(
               getReportDetails: dataModel,
@@ -59,6 +59,86 @@ class _ReportState extends State<Report> {
         ),
       ),
     );
+  }
+
+  Widget _buildMonthTargetGraph() {
+    return ReportBackGround(
+        height: 192,
+        width: 151,
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              ' Monthly Target',
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: CircularPercentIndicator(
+                radius: 30.0.r,
+                lineWidth: 13.0.r,
+                animation: true,
+                percent: 0.7,
+                footer: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: new Text(
+                    "100/ 25",
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0.sp,
+                        color: Colors.white),
+                  ),
+                ),
+                circularStrokeCap: CircularStrokeCap.square,
+                progressColor: Colors.purple,
+                backgroundColor: Colors.yellowAccent,
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget _buildWeeklyTargetGraph() {
+    return ReportBackGround(
+        height: 192,
+        width: 151,
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              ' Weekly Target',
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: CircularPercentIndicator(
+                radius: 30.0.r,
+                lineWidth: 13.0.r,
+                animation: true,
+                percent: 0.7,
+                footer: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: new Text(
+                    "100/ 25",
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0.sp,
+                        color: Colors.white),
+                  ),
+                ),
+                circularStrokeCap: CircularStrokeCap.square,
+                progressColor: Colors.purple,
+                backgroundColor: Colors.yellowAccent,
+              ),
+            ),
+          ],
+        ));
   }
 }
 
@@ -178,45 +258,6 @@ class LinearEmployeePoints extends StatelessWidget {
   }
 }
 
-class CircularMonthlyPoints extends StatelessWidget {
-  const CircularMonthlyPoints({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ReportBackGround(
-        height: 192,
-        width: 151,
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text(
-              ' Monthly Target',
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
-            CircularPercentIndicator(
-              radius: 30.0.r,
-              lineWidth: 13.0.r,
-              animation: true,
-              percent: 0.7,
-              footer: new Text(
-                "100/ 25",
-                style: new TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0.sp,
-                    color: Colors.white),
-              ),
-              circularStrokeCap: CircularStrokeCap.square,
-              progressColor: Colors.purple,
-              backgroundColor: Colors.yellowAccent,
-            ),
-          ],
-        ));
-  }
-}
-
 class ReportButton extends StatelessWidget {
   final String? title;
   const ReportButton({Key? key, required this.title}) : super(key: key);
@@ -249,7 +290,7 @@ class ReportEmployeeDetails extends StatelessWidget {
         width: 330,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
               padding: EdgeInsets.only(left: 8),
@@ -261,12 +302,15 @@ class ReportEmployeeDetails extends StatelessWidget {
             SizedBox(
               height: 10.h,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ReportButton(title: "Name"),
-                ReportButton(title: "Date"),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ReportButton(title: "Name"),
+                  ReportButton(title: "Date"),
+                ],
+              ),
             ),
             ListView.builder(
                 shrinkWrap: true,
@@ -285,10 +329,13 @@ class ReportEmployeeDetails extends StatelessWidget {
 
                           //  SizedBox(width: 2.h,),
 
-                          Text(
-                            getReportDetails![i].name.toString(),
-                            style: TextStyle(
-                                color: Color(0xff939F9A), fontSize: 12.sp),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6.0),
+                            child: Text(
+                              getReportDetails![i].name.toString(),
+                              style: TextStyle(
+                                  color: Color(0xff939F9A), fontSize: 12.sp),
+                            ),
                           ),
 
                           SizedBox(

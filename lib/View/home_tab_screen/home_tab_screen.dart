@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:freeze_app/View/Bottomnavpage/List_of_pages/Profile_page/profile.dart';
-import 'package:freeze_app/View/Bottomnavpage/List_of_pages/Report/report.dart';
+import 'package:freeze_app/View/report_screen/report_screen.dart';
 import 'package:freeze_app/View/Bottomnavpage/List_of_pages/Wallet_page/Wallet.dart';
+import 'package:freeze_app/http/response/get_user_profile_response.dart';
+import 'package:freeze_app/shared/sharedservice.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
@@ -20,6 +22,8 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
   int currentIndex = 0;
   int counter = 0;
 
+  GetUserProfileResponse? user;
+
   void incrementCounter() {
     setState(() {
       counter++;
@@ -31,7 +35,7 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
   List _pages = [
     //  Innovation_rank(),
     Homescreen(),
-    Report(),
+    ReportScreen(),
     Wallet(),
     Profile()
   ];
@@ -59,11 +63,19 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
     ),
   ].toList();
 
-  // @override
-  // void initState() {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserDetail();
+  }
 
-  //   pagecontroll;
-  // }
+  void getUserDetail() async {
+    user = await PreferenceHelper.getUser();
+
+    // Uint8List bytes = base64.decode(user?.img ?? '');
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,16 +98,19 @@ class _HomeTabScreenState extends State<HomeTabScreen> {
             SizedBox(
               width: 10,
             ),
-            Text(
-              'Magesh',
-              style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.bold),
-            )
+            if (user != null)
+              Text(
+                user?.name ?? '',
+                style: GoogleFonts.montserrat(
+                    color: Colors.white,
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.bold),
+              )
           ],
         ),
         actions: [
+          // if (user != null && user?.img != null)
+          //   Image.memory(base64Decode(user?.img ?? ''))
           Image.asset('assets/images/Profile Circle.png'),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:freeze_app/http/response/get_all_target_response/get_all_target_
 import 'package:freeze_app/http/response/get_role_response.dart';
 import 'package:freeze_app/http/response/get_user_profile_response.dart';
 import 'package:freeze_app/http/response/role_type_response.dart';
+import 'package:freeze_app/shared/sharedservice.dart';
 
 import '../../utils/apputils.dart';
 import '../dio.dart';
@@ -57,19 +58,17 @@ class HomeRepository {
     return roleTypeResponse;
   }
 
-  
-
   static Future<GetUserProfileResponse?> getUserProfile(String email) async {
     String url = HttpUrls.getpersonaldetails;
-    final response = await dio().post(url,data: {
-      "email":email
-    });
+    final response = await dio().post(url, data: {"email": email});
 
     GetUserProfileResponse? userProfileResponse;
 
     if (response.statusCode == 200) {
-      userProfileResponse =
-          GetUserProfileResponse.fromJson(response.data as Map<String, dynamic>);
+      userProfileResponse = GetUserProfileResponse.fromJson(
+          response.data as Map<String, dynamic>);
+
+      await PreferenceHelper.saveUser(userProfileResponse);
     } else {
       AppUtils.showToast(response.data["err"] ?? 'Something Went wrong',
           color: Colors.red);
